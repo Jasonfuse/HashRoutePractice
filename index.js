@@ -6,24 +6,22 @@ const state = {
     singlecharacter: null
 };
 
-// window.addEventListener("hashchange", () => {
-//     selectSingleChar();
-// });
-
-// function selectSingleChar() {
-//     getEventFromHash();
-//     renderPokemonDetails();
-// }
+window.addEventListener("hashchange", () => {
+    const name = decodeURI(window.location.hash.slice(1));
+    singleChar.innerHTML = name;
+});
 
 async function getCharList() {
     const info = await fetch("https://swapi.dev/api/people");
     const charData = await info.json();
     state.characters = charData.results;
+    renderCharList();
 }
 
 function renderCharList() {
-    const allChar = state.characters.map((char) => {
-        return `<div> ${char.name} </div>`;
+    const allChar = state.characters.map(char => {
+        console.log(char);
+        return `<div> <a href = "#${char.name}"> ${char.name} </a> </div>`;
     });
     charList.innerHTML = allChar.join('');
 }
