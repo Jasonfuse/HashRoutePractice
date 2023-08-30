@@ -8,7 +8,11 @@ const state = {
 
 window.addEventListener("hashchange", () => {
     const name = decodeURI(window.location.hash.slice(1));
-    singleChar.innerHTML = name;
+    const person = state.characters.find(char => {
+        return char.name === name;
+    })
+    state.singlecharacter = person;
+    singleChar.innerHTML = state.singlecharacter.name;
 });
 
 async function getCharList() {
@@ -16,6 +20,12 @@ async function getCharList() {
     const charData = await info.json();
     state.characters = charData.results;
     renderCharList();
+    const name = decodeURI(window.location.hash.slice(1));
+    const person = state.characters.find(char => {
+        return char.name === name;
+    })
+    state.singlecharacter = person;
+    singleChar.innerHTML = state.singlecharacter.name;
 }
 
 function renderCharList() {
