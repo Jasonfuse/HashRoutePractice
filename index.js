@@ -3,37 +3,51 @@ const singleChar = document.getElementById("singleChar");
 
 const state = {
     characters: [],
-    singlecharacter: null
+    singleCharacter: null
 };
 
 window.addEventListener("hashchange", () => {
-    const name = decodeURI(window.location.hash.slice(1));
-    const person = state.characters.find(char => {
-        return char.name === name;
+    const hash = decodeURI(window.location.hash.slice(1));
+    const single = state.characters.find(char => {
+        return char.name === hash;
     })
-    state.singlecharacter = person;
-    singleChar.innerHTML = state.singlecharacter.name;
+
+    if(single) singleChar.innerHTML = single.name;
+    else singleChar.innerHTML = '';
 });
+
+// Refresh/page loading functions
+async function render() {
+    await getCharList();
+    renderCharList();
+}
 
 async function getCharList() {
     const info = await fetch("https://swapi.dev/api/people");
     const charData = await info.json();
     state.characters = charData.results;
-    renderCharList();
-    const name = decodeURI(window.location.hash.slice(1));
-    const person = state.characters.find(char => {
-        return char.name === name;
+    const hash = decodeURI(window.location.hash.slice(1));
+    const single = state.characters.find(char => {
+        return char.name === hash;
     })
-    state.singlecharacter = person;
-    singleChar.innerHTML = state.singlecharacter.name;
+
+    if(single) singleChar.innerHTML = single.name;
+    else singleChar.innerHTML = '';
 }
 
+// '' = use to get the whole name of the string for href
 function renderCharList() {
-    const allChar = state.characters.map(char => {
-        console.log(char);
-        return `<div> <a href = "#${char.name}"> ${char.name} </a> </div>`;
+    const html = state.characters.map((char) => {
+        const charName = char.name;
+        return `<div> <a href = '#${charName}'> ${char.name} </a> </div>`;
     });
-    charList.innerHTML = allChar.join('');
+    charList.innerHTML = html.join('');
 }
 
-getCharList();
+render();
+
+//TODO
+/*
+    use url to see what page you want to be in 
+    server-side page
+*/
